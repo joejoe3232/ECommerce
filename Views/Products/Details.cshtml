@@ -1,0 +1,83 @@
+@model ECommerceApp.Models.Product
+
+@{
+    ViewData["Title"] = "產品詳情";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+            {
+                <img src="@Model.ImageUrl" class="img-fluid rounded shadow" alt="@Model.Name">
+            }
+            else
+            {
+                <div class="bg-light rounded shadow d-flex align-items-center justify-content-center" style="height: 400px;">
+                    <i class="fas fa-image fa-5x text-muted"></i>
+                </div>
+            }
+        </div>
+        
+        <div class="col-md-6">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">首頁</a></li>
+                    <li class="breadcrumb-item"><a asp-controller="Products" asp-action="Index">產品</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+                </ol>
+            </nav>
+
+            <h1 class="h2 mb-3">@Model.Name</h1>
+            
+            @if (Model.Category != null)
+            {
+                <span class="badge badge-primary mb-3">@Model.Category.Name</span>
+            }
+            
+            <div class="mb-4">
+                <h3 class="text-success font-weight-bold">NT$ @Model.Price.ToString("N0")</h3>
+                <p class="text-muted">
+                    @if (Model.StockQuantity > 0)
+                    {
+                        <span class="text-success">
+                            <i class="fas fa-check-circle"></i> 有庫存 (@Model.StockQuantity 件)
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="text-danger">
+                            <i class="fas fa-times-circle"></i> 缺貨
+                        </span>
+                    }
+                </p>
+            </div>
+
+            <div class="mb-4">
+                <h5>產品描述</h5>
+                <p class="text-muted">@Model.Description</p>
+            </div>
+
+            <div class="mb-4">
+                <h5>產品資訊</h5>
+                <ul class="list-unstyled">
+                    <li><strong>產品編號:</strong> #@Model.Id</li>
+                    <li><strong>建立日期:</strong> @Model.CreatedAt.ToString("yyyy/MM/dd")</li>
+                    <li><strong>最後更新:</strong> @Model.UpdatedAt.ToString("yyyy/MM/dd")</li>
+                </ul>
+            </div>
+
+            <div class="d-flex gap-2">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                    <i class="fas fa-edit"></i> 編輯
+                </a>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> 返回列表
+                </a>
+                <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> 刪除
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

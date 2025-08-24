@@ -1,0 +1,98 @@
+@model IEnumerable<ECommerceApp.Models.Order>
+
+@{
+    ViewData["Title"] = "訂單管理";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">@ViewData["Title"]</h1>
+        <a asp-action="Create" class="btn btn-success">
+            <i class="fas fa-plus"></i> 新增訂單
+        </a>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>訂單編號</th>
+                            <th>客戶姓名</th>
+                            <th>訂單日期</th>
+                            <th>總金額</th>
+                            <th>狀態</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <strong>@item.OrderNumber</strong>
+                                </td>
+                                <td>
+                                    <div>
+                                        <div>@item.CustomerName</div>
+                                        <small class="text-muted">@item.CustomerEmail</small>
+                                    </div>
+                                </td>
+                                <td>@item.OrderDate.ToString("yyyy/MM/dd HH:mm")</td>
+                                <td>
+                                    <span class="font-weight-bold text-success">
+                                        NT$ @item.TotalAmount.ToString("N0")
+                                    </span>
+                                </td>
+                                <td>
+                                    @{
+                                        var statusClass = item.Status switch
+                                        {
+                                            OrderStatus.Pending => "badge-warning",
+                                            OrderStatus.Processing => "badge-info",
+                                            OrderStatus.Shipped => "badge-primary",
+                                            OrderStatus.Delivered => "badge-success",
+                                            OrderStatus.Cancelled => "badge-danger",
+                                            _ => "badge-secondary"
+                                        };
+                                        
+                                        var statusText = item.Status switch
+                                        {
+                                            OrderStatus.Pending => "待處理",
+                                            OrderStatus.Processing => "處理中",
+                                            OrderStatus.Shipped => "已出貨",
+                                            OrderStatus.Delivered => "已送達",
+                                            OrderStatus.Cancelled => "已取消",
+                                            _ => item.Status.ToString()
+                                        };
+                                    }
+                                    <span class="badge @statusClass">@statusText</span>
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-primary" title="查看詳情">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-warning" title="編輯">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            @if (!Model.Any())
+            {
+                <div class="text-center py-5">
+                    <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+                    <h4 class="text-muted">沒有訂單</h4>
+                    <p class="text-muted">點擊上方按鈕新增第一筆訂單</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
