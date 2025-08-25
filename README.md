@@ -43,46 +43,57 @@
 ### 1. 複製專案
 ```bash
 git clone [repository-url]
+cd ECommerce
+```
+
+### 2. 進入專案目錄
+```bash
 cd ECommerceApp
 ```
 
-### 2. 還原套件
+### 3. 還原套件
 ```bash
 dotnet restore
 ```
 
-### 3. 建立資料庫
+### 4. 建立資料庫
 ```bash
 dotnet ef database update
 ```
 
-### 4. 執行專案
+### 5. 執行專案
 ```bash
 dotnet run
 ```
 
-### 5. 開啟瀏覽器
+### 6. 開啟瀏覽器
 前往 `https://localhost:5001` 或 `http://localhost:5000`
 
 ## 專案結構
 
 ```
-ECommerceApp/
-├── Controllers/          # 控制器
-│   ├── ProductsController.cs
-│   └── OrdersController.cs
-├── Models/              # 資料模型
-│   ├── Product.cs
-│   ├── Category.cs
-│   ├── Order.cs
-│   └── OrderItem.cs
-├── Views/               # 視圖
-│   ├── Products/        # 產品相關視圖
-│   ├── Orders/          # 訂單相關視圖
-│   └── Shared/          # 共用視圖
-├── Data/                # 資料存取層
-│   └── ApplicationDbContext.cs
-└── wwwroot/             # 靜態檔案
+ECommerce/
+├── ECommerceApp/           # 主要專案目錄
+│   ├── Controllers/        # 控制器
+│   │   ├── HomeController.cs
+│   │   ├── ProductsController.cs
+│   │   └── OrdersController.cs
+│   ├── Models/             # 資料模型
+│   │   ├── Product.cs
+│   │   ├── Category.cs
+│   │   ├── Order.cs
+│   │   └── OrderItem.cs
+│   ├── Views/              # 視圖
+│   │   ├── Home/           # 首頁相關視圖
+│   │   ├── Products/       # 產品相關視圖
+│   │   ├── Orders/         # 訂單相關視圖
+│   │   └── Shared/         # 共用視圖
+│   ├── Data/               # 資料存取層
+│   │   └── ApplicationDbContext.cs
+│   ├── wwwroot/            # 靜態檔案
+│   ├── Program.cs          # 應用程式入口點
+│   └── appsettings.json   # 設定檔
+└── README.md               # 專案說明文件
 ```
 
 ## 資料庫模型
@@ -142,19 +153,45 @@ ECommerceApp/
 ## 開發指南
 
 ### 新增功能
-1. 在 `Models/` 資料夾建立新的模型類別
-2. 在 `Controllers/` 資料夾建立對應的控制器
-3. 在 `Views/` 資料夾建立相關的視圖
-4. 更新 `ApplicationDbContext.cs` 加入新的 DbSet
+1. 在 `ECommerceApp/Models/` 資料夾建立新的模型類別
+2. 在 `ECommerceApp/Controllers/` 資料夾建立對應的控制器
+3. 在 `ECommerceApp/Views/` 資料夾建立相關的視圖
+4. 更新 `ECommerceApp/Data/ApplicationDbContext.cs` 加入新的 DbSet
 
 ### 資料庫變更
 ```bash
+# 進入專案目錄
+cd ECommerceApp
+
 # 建立新的遷移
-dotnet ef migrations add [MigrationName]
+dotnet ef migrations add InitialCreate
 
 # 更新資料庫
 dotnet ef database update
-```
+
+# 查看所有遷移
+dotnet ef migrations list
+
+# 查看資料庫狀態
+dotnet ef database update --verbose
+
+# 刪除現有資料庫
+dotnet ef database drop
+
+# 重新建立資料庫
+dotnet ef database update
+
+
+##如果專案還沒有 Migrations 目錄。建立初始的資料庫遷移：
+步驟1：安裝 Entity Framework 工具（如果還沒安裝）
+dotnet tool install --global dotnet-ef
+
+步驟2：建立初始 Migration
+dotnet ef migrations add InitialCreate
+
+步驟3：更新資料庫
+dotnet ef database update
+
 
 ## 授權
 

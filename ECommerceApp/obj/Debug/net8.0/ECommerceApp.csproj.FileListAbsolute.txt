@@ -134,3 +134,4 @@ C:\Users\林建嘉\Documents\ECommerce\ECommerceApp\bin\Debug\net8.0\runtimes\wi
 C:\Users\林建嘉\Documents\ECommerce\ECommerceApp\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
 C:\Users\林建嘉\Documents\ECommerce\ECommerceApp\obj\Debug\net8.0\ECommerceApp.csproj.AssemblyReference.cache
 C:\Users\林建嘉\Documents\ECommerce\ECommerceApp\obj\Debug\net8.0\ECommerc.3D7212AD.Up2Date
+C:\Users\林建嘉\Documents\ECommerce\ECommerceApp\obj\Debug\net8.0\ECommerceApp.sourcelink.json

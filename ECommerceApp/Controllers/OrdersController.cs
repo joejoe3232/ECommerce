@@ -123,11 +123,47 @@ namespace ECommerceApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
             return View(order);
         }
 
-        // POST: Orders/UpdateStatus/5
+        // GET: Orders/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var order = await _context.Orders
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            return View(order);
+        }
+
+        // POST: Orders/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var order = await _context.Orders.FindAsync(id);
+            if (order != null)
+            {
+                _context.Orders.Remove(order);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        // POST: Orders/UpdateStatus
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateStatus(int id, OrderStatus status)
         {
             var order = await _context.Orders.FindAsync(id);
@@ -137,18 +173,76 @@ namespace ECommerceApp.Controllers
             }
 
             order.Status = status;
-            
-            if (status == OrderStatus.Shipped)
+
+            switch (status)
             {
-                order.ShippedDate = DateTime.Now;
-            }
-            else if (status == OrderStatus.Delivered)
-            {
-                order.DeliveredDate = DateTime.Now;
+                case OrderStatus.Shipped:
+                    order.ShippedDate = DateTime.Now;
+                    break;
+                case OrderStatus.Delivered:
+                    order.DeliveredDate = DateTime.Now;
+                    break;
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Details), new { id = id });
+        }
+
+        // POST: Orders/AddOrderItem
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddOrderItem(int orderId, int productId, int quantity)
+        {
+            var order = await _context.Orders.FindAsync(orderId);
+            var product = await _context.Products.FindAsync(productId);
+
+            if (order == null || product == null)
+            {
+                return NotFound();
+            }
+
+            var orderItem = new OrderItem
+            {
+                OrderId = orderId,
+                ProductId = productId,
+                Quantity = quantity,
+                UnitPrice = product.Price
+            };
+
+            _context.OrderItems.Add(orderItem);
+
+            // 更新訂單總金額
+            order.TotalAmount += (product.Price * quantity);
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Details), new { id = orderId });
+        }
+
+        // POST: Orders/RemoveOrderItem
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveOrderItem(int orderItemId)
+        {
+            var orderItem = await _context.OrderItems
+                .Include(oi => oi.Order)
+                .FirstOrDefaultAsync(oi => oi.Id == orderItemId);
+
+            if (orderItem == null)
+            {
+                return NotFound();
+            }
+
+            var order = orderItem.Order;
+            if (order != null)
+            {
+                order.TotalAmount -= (orderItem.UnitPrice * orderItem.Quantity);
+                _context.OrderItems.Remove(orderItem);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Details), new { id = order.Id });
+            }
+            
+            return RedirectToAction(nameof(Index));
         }
 
         private bool OrderExists(int id)
@@ -158,7 +252,7 @@ namespace ECommerceApp.Controllers
 
         private string GenerateOrderNumber()
         {
-            return "ORD" + DateTime.Now.ToString("yyyyMMddHHmmss");
+            return "ORD-" + DateTime.Now.ToString("yyyyMMdd-HHmmss");
         }
     }
 }
