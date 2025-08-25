@@ -1,0 +1,79 @@
+@model ECommerceApp.Models.Order
+
+@{
+    ViewData["Title"] = "新增訂單";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-plus-circle text-success"></i> @ViewData["Title"]
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                        
+                        <div class="form-group row">
+                            <label asp-for="CustomerName" class="col-sm-3 col-form-label">客戶姓名 <span class="text-danger">*</span></label>
+                            <div class="col-sm-9">
+                                <input asp-for="CustomerName" class="form-control" placeholder="請輸入客戶姓名">
+                                <span asp-validation-for="CustomerName" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label asp-for="CustomerEmail" class="col-sm-3 col-form-label">客戶信箱 <span class="text-danger">*</span></label>
+                            <div class="col-sm-9">
+                                <input asp-for="CustomerEmail" class="form-control" type="email" placeholder="請輸入客戶信箱">
+                                <span asp-validation-for="CustomerEmail" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label asp-for="CustomerPhone" class="col-sm-3 col-form-label">客戶電話 <span class="text-danger">*</span></label>
+                            <div class="col-sm-9">
+                                <input asp-for="CustomerPhone" class="form-control" placeholder="請輸入客戶電話">
+                                <span asp-validation-for="CustomerPhone" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label asp-for="ShippingAddress" class="col-sm-3 col-form-label">送貨地址 <span class="text-danger">*</span></label>
+                            <div class="col-sm-9">
+                                <textarea asp-for="ShippingAddress" class="form-control" rows="3" placeholder="請輸入完整的送貨地址"></textarea>
+                                <span asp-validation-for="ShippingAddress" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label asp-for="Notes" class="col-sm-3 col-form-label">備註</label>
+                            <div class="col-sm-9">
+                                <textarea asp-for="Notes" class="form-control" rows="3" placeholder="請輸入訂單備註（選填）"></textarea>
+                                <span asp-validation-for="Notes" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-sm-9 offset-sm-3">
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-save"></i> 建立訂單
+                                </button>
+                                <a asp-action="Index" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left"></i> 返回列表
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

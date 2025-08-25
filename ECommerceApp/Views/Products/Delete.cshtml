@@ -1,0 +1,110 @@
+@model ECommerceApp.Models.Product
+
+@{
+    ViewData["Title"] = "刪除產品";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-exclamation-triangle"></i> 確認刪除產品
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning" role="alert">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <strong>警告：</strong> 刪除產品後將無法復原，此操作會同時影響所有相關的訂單項目。
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                            {
+                                <img src="@Model.ImageUrl" class="img-fluid rounded shadow" alt="@Model.Name">
+                            }
+                            else
+                            {
+                                <div class="bg-light rounded shadow d-flex align-items-center justify-content-center" style="height: 200px;">
+                                    <i class="fas fa-image fa-3x text-muted"></i>
+                                </div>
+                            }
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h5>產品資訊</h5>
+                            <dl class="row">
+                                <dt class="col-sm-4">產品名稱</dt>
+                                <dd class="col-sm-8"><strong>@Model.Name</strong></dd>
+                                
+                                <dt class="col-sm-4">產品分類</dt>
+                                <dd class="col-sm-8">
+                                    @if (Model.Category != null)
+                                    {
+                                        <span class="badge badge-primary">@Model.Category.Name</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">未分類</span>
+                                    }
+                                </dd>
+                                
+                                <dt class="col-sm-4">價格</dt>
+                                <dd class="col-sm-8">
+                                    <span class="font-weight-bold text-success">NT$ @Model.Price.ToString("N0")</span>
+                                </dd>
+                                
+                                <dt class="col-sm-4">庫存數量</dt>
+                                <dd class="col-sm-8">
+                                    @if (Model.StockQuantity > 0)
+                                    {
+                                        <span class="text-success">
+                                            <i class="fas fa-check-circle"></i> @Model.StockQuantity 件
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-danger">
+                                            <i class="fas fa-times-circle"></i> 缺貨
+                                        </span>
+                                    }
+                                </dd>
+                                
+                                <dt class="col-sm-4">建立日期</dt>
+                                <dd class="col-sm-8">@Model.CreatedAt.ToString("yyyy/MM/dd")</dd>
+                                
+                                <dt class="col-sm-4">最後更新</dt>
+                                <dd class="col-sm-8">@Model.UpdatedAt.ToString("yyyy/MM/dd")</dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <h5>產品描述</h5>
+                            <p class="text-muted">@Model.Description</p>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <form asp-action="Delete" method="post">
+                                <input type="hidden" asp-for="Id" />
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="fas fa-trash"></i> 確認刪除
+                                    </button>
+                                    <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">
+                                        <i class="fas fa-arrow-left"></i> 取消
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
